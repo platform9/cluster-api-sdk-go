@@ -19,12 +19,12 @@ type ClusterctlClient struct {
 	Kubeconfig cluster.Kubeconfig
 }
 
-func (c *ClusterctlClient) GetKubeconfig(ctx context.Context, WorkloadClusterName string, Namespace string) (*string, error) {
+func (c *ClusterctlClient) GetKubeconfig(ctx context.Context, workloadClusterName string, namespace string) (*string, error) {
 	clientKubeconfig := clusterctlClient.Kubeconfig{Path: c.Kubeconfig.Path}
 	options := clusterctlClient.GetKubeconfigOptions{
 		Kubeconfig:          clientKubeconfig,
-		Namespace:           Namespace,
-		WorkloadClusterName: WorkloadClusterName,
+		Namespace:           namespace,
+		WorkloadClusterName: workloadClusterName,
 	}
 	kubeconfig, err := c.Client.GetKubeconfig(ctx, options)
 	if err != nil {
@@ -33,10 +33,10 @@ func (c *ClusterctlClient) GetKubeconfig(ctx context.Context, WorkloadClusterNam
 	return &kubeconfig, nil
 }
 
-func (c *ClusterctlClient) GetWorkloadClusterClient(ctx context.Context, WorkloadClusterName string, Namespace string) (client.Client, error) {
+func (c *ClusterctlClient) GetWorkloadClusterClient(ctx context.Context, workloadClusterName string, namespace string) (client.Client, error) {
 	var kubeconfig *string
 
-	kubeconfig, err := c.GetKubeconfig(ctx, WorkloadClusterName, Namespace)
+	kubeconfig, err := c.GetKubeconfig(ctx, workloadClusterName, namespace)
 	if err != nil {
 		return nil, err
 	}
