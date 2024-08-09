@@ -8,7 +8,7 @@ import (
 	"github.com/platform9/cluster-api-sdk-go/controlplane"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 
 	kcpv1alpha1 "github.com/clastix/cluster-api-control-plane-provider-kamaji/api/v1alpha1"
 )
@@ -70,31 +70,30 @@ func (c *KamajiProviderImpl) CreateControlPlane(ctx context.Context, input contr
 			Namespace: cpInput.Namespace,
 		},
 		Spec: kcpv1alpha1.KamajiControlPlaneSpec{
-			KamajiControlPlaneFields: kcpv1alpha1.KamajiControlPlaneFields{
-				ApiServer: kcpv1alpha1.ControlPlaneComponent{
-					ExtraArgs: cpInput.APIServerExtraArgs,
+			ApiServer: kcpv1alpha1.ControlPlaneComponent{
+				ExtraArgs: cpInput.APIServerExtraArgs,
+			},
+			ControllerManager: kcpv1alpha1.ControlPlaneComponent{
+				ExtraArgs: cpInput.ControllerManagerExtraArgs,
+			},
+			DataStoreName: cpInput.Datastore,
+			Addons: kcpv1alpha1.AddonsSpec{
+				AddonsSpec: *cpInput.AddonsSpec,
+				CoreDNS:    cpInput.CoreDNSAddonSpec,
+			},
+			Kubelet: kamajiv1alpha1.KubeletSpec{
+				CGroupFS: kamajiv1alpha1.CGroupDriver(cpInput.CGroupDriver),
+			},
+			Network: kcpv1alpha1.NetworkComponent{
+				ServiceType: kamajiv1alpha1.ServiceTypeClusterIP,
+				CertSANs:    cpInput.CertSANs,
+				Ingress: &kcpv1alpha1.IngressComponent{
+					ClassName:        ClassNameNginx,
+					Hostname:         cpInput.IngressHostname,
+					ExtraAnnotations: cpInput.ExtraAnnotations,
 				},
-				ControllerManager: kcpv1alpha1.ControlPlaneComponent{
-					ExtraArgs: cpInput.ControllerManagerExtraArgs,
-				},
-				DataStoreName: cpInput.Datastore,
-				Addons: kcpv1alpha1.AddonsSpec{
-					AddonsSpec: *cpInput.AddonsSpec,
-					CoreDNS:    cpInput.CoreDNSAddonSpec,
-				},
-				Kubelet: kamajiv1alpha1.KubeletSpec{
-					CGroupFS: kamajiv1alpha1.CGroupDriver(cpInput.CGroupDriver),
-				},
-				Network: kcpv1alpha1.NetworkComponent{
-					ServiceType: kamajiv1alpha1.ServiceTypeClusterIP,
-					CertSANs:    cpInput.CertSANs,
-					Ingress: &kcpv1alpha1.IngressComponent{
-						ClassName:        ClassNameNginx,
-						Hostname:         cpInput.IngressHostname,
-						ExtraAnnotations: cpInput.ExtraAnnotations,
-					},
-				}},
-			Replicas: pointer.Int32(cpInput.Replicas),
+			},
+			Replicas: ptr.To(cpInput.Replicas),
 			Version:  cpInput.K8sVersion,
 		},
 	}

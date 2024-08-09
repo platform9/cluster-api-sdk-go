@@ -15,9 +15,10 @@ type GetKubeadmConfigTemplateInput struct {
 }
 
 type CreateKubeadmConfigTemplateInput struct {
-	Name, Namespace   string
-	Files             []bootstrapv1.File
-	JoinConfiguration *bootstrapv1.JoinConfiguration
+	Name, Namespace    string
+	Files              []bootstrapv1.File
+	JoinConfiguration  *bootstrapv1.JoinConfiguration
+	PreKubeadmCommands []string
 }
 
 type DeleteKubeadmConfigTemplateInput struct {
@@ -60,6 +61,7 @@ func (c KubeadmProviderImpl) CreateBootstrapConfigTemplate(ctx context.Context, 
 
 	kcp.Spec.Template.Spec.Files = kctInput.Files
 	kcp.Spec.Template.Spec.JoinConfiguration = kctInput.JoinConfiguration
+	kcp.Spec.Template.Spec.PreKubeadmCommands = kctInput.PreKubeadmCommands
 	err := c.Client.Create(ctx, kcp)
 	if err != nil {
 		return err
