@@ -47,6 +47,8 @@ type CreateAWSMachineTemplateInput struct {
 	AdditionalTags awsv2.Tags
 
 	InstanceMetadataOptions *awsv2.InstanceMetadataOptions
+
+	EnableSecretsManager bool `json:"enableSecretsManager,omitempty" default:"true"`
 }
 
 // VolumeType describes the EBS volume type.
@@ -107,6 +109,9 @@ func (a *AWSProviderImpl) CreateInfraMachineTemplate(ctx context.Context, input 
 					NonRootVolumes:          awsInput.NonRootDisk,
 					ImageLookupBaseOS:       awsInput.ImageLookupBaseOS,
 					InstanceMetadataOptions: awsInput.InstanceMetadataOptions,
+					CloudInit: awsv2.CloudInit{
+						InsecureSkipSecretsManager: !awsInput.EnableSecretsManager,
+					},
 				},
 			},
 		},
