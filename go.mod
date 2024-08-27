@@ -5,8 +5,8 @@ go 1.22.0
 toolchain go1.22.4
 
 require (
-	github.com/clastix/cluster-api-control-plane-provider-kamaji v0.9.0
-	github.com/clastix/kamaji v0.6.0
+	github.com/clastix/cluster-api-control-plane-provider-kamaji v0.11.0
+	github.com/clastix/kamaji v1.0.0
 	github.com/projectsveltos/addon-controller v0.35.0
 	go.uber.org/mock v0.4.0
 	k8s.io/api v0.30.3
