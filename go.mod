@@ -1,8 +1,6 @@
 module github.com/platform9/cluster-api-sdk-go
 
-go 1.22.0
-
-toolchain go1.22.4
+go 1.22.4
 
 require (
 	github.com/clastix/cluster-api-control-plane-provider-kamaji v0.11.0
