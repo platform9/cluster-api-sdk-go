@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	addon "github.com/platform9/cluster-api-sdk-go/addon"
-	sveltos "github.com/projectsveltos/addon-controller/api/v1alpha1"
+	sveltos "github.com/projectsveltos/addon-controller/api/v1beta1"
 )
 
 type GetSveltosClusterSummaryInput struct {
