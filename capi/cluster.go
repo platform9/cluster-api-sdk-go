@@ -31,7 +31,8 @@ func (c *CAPICore) CreateCluster(ctx context.Context, input *CreateClusterInput)
 			Name:      input.Name,
 			Namespace: input.Namespace,
 			Labels: map[string]string{
-				"core-addons": "enabled",
+				"core-addons":     "enabled",
+				"emp-luigi-addon": "enabled",
 			},
 		},
 		Spec: clusterv1.ClusterSpec{
