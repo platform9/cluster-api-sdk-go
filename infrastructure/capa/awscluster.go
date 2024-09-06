@@ -45,6 +45,8 @@ type CreateAWSClusterInput struct {
 	IdentityRef *awsv2.AWSIdentityReference
 
 	CNIIngressRules *awsv2.CNIIngressRules
+
+	AdditionalTags awsv2.Tags
 }
 
 type DeleteAWSClusterInput struct {
@@ -119,8 +121,9 @@ func (a *AWSProviderImpl) CreateInfraCluster(ctx context.Context, input infrastr
 			Namespace: awsInput.Namespace,
 		},
 		Spec: awsv2.AWSClusterSpec{
-			Region:     awsInput.Region,
-			SSHKeyName: &awsInput.SSHKey,
+			Region:         awsInput.Region,
+			SSHKeyName:     &awsInput.SSHKey,
+			AdditionalTags: awsInput.AdditionalTags,
 			NetworkSpec: awsv2.NetworkSpec{
 				CNI: &awsv2.CNISpec{
 					CNIIngressRules: awsv2.CNIIngressRules{},
