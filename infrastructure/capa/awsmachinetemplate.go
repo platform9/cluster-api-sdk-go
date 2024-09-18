@@ -98,8 +98,9 @@ func (a *AWSProviderImpl) CreateInfraMachineTemplate(ctx context.Context, input 
 		Spec: awsv2.AWSMachineTemplateSpec{
 			Template: awsv2.AWSMachineTemplateResource{
 				Spec: awsv2.AWSMachineSpec{
-					InstanceType: awsInput.InstanceType,
-					SSHKeyName:   &awsInput.SSHKey,
+					AdditionalTags: awsInput.AdditionalTags,
+					InstanceType:   awsInput.InstanceType,
+					SSHKeyName:     &awsInput.SSHKey,
 
 					RootVolume: &awsv2.Volume{
 						Size: awsInput.RootDisk.Size,
