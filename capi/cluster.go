@@ -2,10 +2,10 @@ package capi
 
 import (
 	"context"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"maps"
 	clusterv1 "sigs.k8s.io/cluster-api/api/v1beta1"
 )
 
@@ -19,6 +19,7 @@ type CreateClusterInput struct {
 	APIServerPort                      *int32
 	PodCIDRs, ServiceCIDRs             []string
 	ControlPlaneRef, InfrastructureRef *corev1.ObjectReference
+	Labels                             map[string]string
 }
 
 type DeleteClusterInput struct {
@@ -26,14 +27,16 @@ type DeleteClusterInput struct {
 }
 
 func (c *CAPICore) CreateCluster(ctx context.Context, input *CreateClusterInput) error {
+	allLabels := map[string]string{
+		"core-addons":     "enabled",
+		"emp-luigi-addon": "enabled",
+	}
+	maps.Copy(allLabels, input.Labels)
 	cluster := &clusterv1.Cluster{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      input.Name,
 			Namespace: input.Namespace,
-			Labels: map[string]string{
-				"core-addons":     "enabled",
-				"emp-luigi-addon": "enabled",
-			},
+			Labels:    allLabels,
 		},
 		Spec: clusterv1.ClusterSpec{
 			ClusterNetwork: &clusterv1.ClusterNetwork{

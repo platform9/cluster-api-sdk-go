@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"context"
 	"fmt"
+	"maps"
 
 	"github.com/platform9/cluster-api-sdk-go/infrastructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -162,9 +163,7 @@ func (a *AWSProviderImpl) CreateInfraCluster(ctx context.Context, input infrastr
 
 	if len(awsInput.AdditionalLabels) > 0 {
 		awsCluster.ObjectMeta.Labels = make(map[string]string)
-		for key, value := range awsInput.AdditionalLabels {
-			awsCluster.ObjectMeta.Labels[key] = value
-		}
+		maps.Copy(awsCluster.ObjectMeta.Labels, awsInput.AdditionalLabels)
 	}
 
 	err := a.Client.Create(ctx, awsCluster)

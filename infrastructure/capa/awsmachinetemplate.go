@@ -70,8 +70,8 @@ var (
 
 	// VolumeTypesGP are volume types provisioned for general purpose io.
 	VolumeTypesGP = sets.NewString(
-		string(VolumeTypeIO1),
-		string(VolumeTypeIO2),
+		string(VolumeTypeGP2),
+		string(VolumeTypeGP3),
 	)
 
 	// VolumeTypesProvisioned are volume types provisioned for high performance io.

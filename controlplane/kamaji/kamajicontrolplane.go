@@ -3,6 +3,7 @@ package controlplane
 import (
 	"context"
 	"fmt"
+	"maps"
 
 	kamajiv1alpha1 "github.com/clastix/kamaji/api/v1alpha1"
 	"github.com/platform9/cluster-api-sdk-go/controlplane"
@@ -24,6 +25,7 @@ type CreateKamajiControlPlaneInput struct {
 	CoreDNSAddonSpec                                                      *kcpv1alpha1.CoreDNSAddonSpec
 	Replicas                                                              int32
 	ExtraAnnotations                                                      map[string]string
+	AdditionalLabels                                                      map[string]string
 }
 
 type DeleteKamajiControlPlaneInput struct {
@@ -63,7 +65,6 @@ func (c *KamajiProviderImpl) CreateControlPlane(ctx context.Context, input contr
 	if !ok {
 		return fmt.Errorf("invalid argument to CreateControlPlane, input is not type '%s'", TypeCreateKamajiControlPlaneInput)
 	}
-
 	kcp := &kcpv1alpha1.KamajiControlPlane{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      cpInput.Name,
@@ -100,7 +101,10 @@ func (c *KamajiProviderImpl) CreateControlPlane(ctx context.Context, input contr
 	}
 
 	kcp.Spec.Addons.AddonsSpec = *cpInput.AddonsSpec
-
+	if cpInput.AdditionalLabels != nil {
+		kcp.ObjectMeta.Labels = make(map[string]string)
+		maps.Copy(kcp.ObjectMeta.Labels, cpInput.AdditionalLabels)
+	}
 	err := c.Client.Create(ctx, kcp)
 	if err != nil {
 		return err
