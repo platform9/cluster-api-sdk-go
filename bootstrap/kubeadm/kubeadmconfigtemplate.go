@@ -3,7 +3,6 @@ package bootstrap
 import (
 	"context"
 	"fmt"
-
 	"github.com/platform9/cluster-api-sdk-go/bootstrap"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -19,6 +18,7 @@ type CreateKubeadmConfigTemplateInput struct {
 	Files              []bootstrapv1.File
 	JoinConfiguration  *bootstrapv1.JoinConfiguration
 	PreKubeadmCommands []string
+	AdditionalLabels   map[string]string
 }
 
 type DeleteKubeadmConfigTemplateInput struct {
@@ -51,6 +51,7 @@ func (c KubeadmProviderImpl) CreateBootstrapConfigTemplate(ctx context.Context, 
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      kctInput.Name,
 			Namespace: kctInput.Namespace,
+			Labels:    kctInput.AdditionalLabels,
 		},
 		Spec: bootstrapv1.KubeadmConfigTemplateSpec{
 			Template: bootstrapv1.KubeadmConfigTemplateResource{
@@ -58,7 +59,6 @@ func (c KubeadmProviderImpl) CreateBootstrapConfigTemplate(ctx context.Context, 
 			},
 		},
 	}
-
 	kcp.Spec.Template.Spec.Files = kctInput.Files
 	kcp.Spec.Template.Spec.JoinConfiguration = kctInput.JoinConfiguration
 	kcp.Spec.Template.Spec.PreKubeadmCommands = kctInput.PreKubeadmCommands
