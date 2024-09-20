@@ -49,6 +49,9 @@ type CreateAWSMachineTemplateInput struct {
 	InstanceMetadataOptions *awsv2.InstanceMetadataOptions
 
 	EnableSecretsManager bool `json:"enableSecretsManager,omitempty" default:"true"`
+
+	// AdditionalLabels are the labels applied to the AWS Machine template
+	AdditionalLabels map[string]string
 }
 
 // VolumeType describes the EBS volume type.

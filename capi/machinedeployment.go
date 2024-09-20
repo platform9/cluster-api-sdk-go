@@ -2,6 +2,7 @@ package capi
 
 import (
 	"context"
+	"maps"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -78,9 +79,7 @@ func (c *CAPICore) CreateMachineDeployment(ctx context.Context, input *CreateMac
 
 	if len(input.AdditionalLabels) > 0 {
 		md.ObjectMeta.Labels = make(map[string]string)
-		for key, value := range input.AdditionalLabels {
-			md.ObjectMeta.Labels[key] = value
-		}
+		maps.Copy(md.Labels, input.AdditionalLabels)
 	}
 
 	err := c.Client.Create(ctx, &md)
