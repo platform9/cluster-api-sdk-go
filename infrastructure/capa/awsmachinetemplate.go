@@ -97,6 +97,7 @@ func (a *AWSProviderImpl) CreateInfraMachineTemplate(ctx context.Context, input 
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      awsInput.Name,
 			Namespace: awsInput.Namespace,
+			Labels:    awsInput.AdditionalLabels,
 		},
 		Spec: awsv2.AWSMachineTemplateSpec{
 			Template: awsv2.AWSMachineTemplateResource{
