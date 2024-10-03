@@ -25,6 +25,7 @@ type CreateKamajiControlPlaneInput struct {
 	Replicas                                                              int32
 	ExtraAnnotations                                                      map[string]string
 	Apiserver, ControllerManager                                          kcpv1alpha1.ControlPlaneComponent
+	KineConnectionArgs                                                    []string
 }
 
 type DeleteKamajiControlPlaneInput struct {
@@ -97,6 +98,11 @@ func (c *KamajiProviderImpl) CreateControlPlane(ctx context.Context, input contr
 	}
 
 	kcp.Spec.Addons.AddonsSpec = *cpInput.AddonsSpec
+
+	if len(cpInput.KineConnectionArgs) > 0 {
+		// if there are connection args pass it along as-is
+		kcp.Spec.Kine.ExtraArgs = cpInput.KineConnectionArgs
+	}
 
 	err := c.Client.Create(ctx, kcp)
 	if err != nil {
